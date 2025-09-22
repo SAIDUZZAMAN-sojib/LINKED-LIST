@@ -33,12 +33,32 @@ void createList(int n) {
             last->next = newNode;
             last = newNode;
         }
-
-        printf("\nDOUBLY LINKED LIST CREATED SUCCESSFULLY\n");
     }
 }
 
+void insert_first(int data) {
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    newNode->data = data;
+    newNode->prev = NULL;
+    newNode->next = head;
+    if (head != NULL)
+        head->prev = newNode;
+    head = newNode;
+    if (last == NULL)
+        last = newNode;
+}
 
+void insert_last(int data) {
+    struct node *newNode = (struct node *)malloc(sizeof(struct node));
+    newNode->data = data;
+    newNode->next = NULL;
+    newNode->prev = last;
+    if (last != NULL)
+        last->next = newNode;
+    last = newNode;
+    if (head == NULL)
+        head = newNode;
+}
 
 void insert_position(int data, int position) {
     struct node *newNode, *temp;
@@ -57,7 +77,6 @@ void insert_position(int data, int position) {
         newNode->prev = NULL;
         head->prev = newNode;
         head = newNode;
-        printf("NODE INSERTED SUCCESSFULLY AT POSITION 1\n");
         return;
     }
 
@@ -67,7 +86,6 @@ void insert_position(int data, int position) {
     }
 
     if (temp == NULL) {
-        printf("Error, Invalid position\n");
         free(newNode);
         return;
     }
@@ -84,8 +102,6 @@ void insert_position(int data, int position) {
     if (newNode->next == NULL) {
         last = newNode;
     }
-
-    printf("NODE INSERTED SUCCESSFULLY AT %d POSITION\n", position);
 }
 
 void displayList() {
@@ -104,6 +120,7 @@ void displayList() {
         }
     }
 }
+
 int main() {
     int n, data, pos;
 
@@ -113,13 +130,23 @@ int main() {
     createList(n);
     displayList();
 
+    printf("\nEnter data to insert at first: ");
+    scanf("%d", &data);
+    insert_first(data);
+    displayList();
+
+    printf("\nEnter data to insert at last: ");
+    scanf("%d", &data);
+    insert_last(data);
+    displayList();
+
     printf("\nEnter data to insert: ");
     scanf("%d", &data);
     printf("Enter position to insert: ");
     scanf("%d", &pos);
-
     insert_position(data, pos);
     displayList();
 
     return 0;
 }
+
