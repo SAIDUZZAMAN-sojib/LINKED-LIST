@@ -1,67 +1,70 @@
 #include <stdio.h>
-#include <stdlib.h>
-
-struct node {
+#include<stdlib.h>
+struct node 
+{
     int data;
     struct node *prev;
     struct node *next;
-} *head, *last;
 
-void createList(int n) {
-    int i, data;
-    struct node *newNode;
-
-    if (n >= 1) {
-        head = (struct node *)malloc(sizeof(struct node));
-        printf("Enter data of 1 node: ");
-        scanf("%d", &data);
-
-        head->data = data;
-        head->prev = NULL;
-        head->next = NULL;
-        last = head;
-
-        for (i = 2; i <= n; i++) {
-            newNode = (struct node *)malloc(sizeof(struct node));
-            printf("Enter data of %d node: ", i);
-            scanf("%d", &data);
-
-            newNode->data = data;
-            newNode->prev = last;
-            newNode->next = NULL;
-
-            last->next = newNode;
-            last = newNode;
+};
+struct node *head,*tail;
+void createlist(int n)
+{
+       int i,data;
+       struct node *newnode,*temp;
+       newnode=(struct node*)malloc(sizeof(struct node ));
+       if (newnode==NULL)
+       {
+        return ;
+       }
+       else 
+       {
+        printf("Enter the data of node 1 :");
+        scanf("%d",&data);
+        newnode->data=data;
+        newnode->prev=NULL;
+        newnode->next=NULL;
+        head=newnode;
+        tail=newnode;
+       }
+       for (int  i = 2; i <=n; i++)
+       {
+        newnode=(struct node*)malloc(sizeof(struct node ));
+        if (newnode==NULL)
+        {
+            return ;
         }
-
-        printf("\nDOUBLY LINKED LIST CREATED SUCCESSFULLY\n");
-    }
-}
-
-void displayList() {
-    struct node *temp;
-    int n = 1;
-
-    if (head == NULL) {
-        printf("List is empty.\n");
-    } else {
-        temp = head;
-        printf("\nDATA IN THE LIST:\n");
-        while (temp != NULL) {
-            printf("DATA of %d node = %d\n", n, temp->data);
-            n++;
-            temp = temp->next;
+        else 
+        {
+            printf("Enter the data of node %d :",i);
+            scanf("%d",&data);
+            newnode->data=data;
+            newnode->prev=tail;
+            newnode->next=NULL;
+            tail->next=newnode;
+            tail=newnode;
         }
-    }
+        
+       }
+       
 }
-
-int main() {
+void display()
+{
+    struct node *temp=head;
+    while (temp!=NULL)
+    {
+        printf("->%d<-",temp->data);
+        temp=temp->next;
+    }
+    printf("NULL\n");
+    
+}
+int main() { 
     int n;
-    printf("Enter the number of nodes: ");
-    scanf("%d", &n);
-
-    createList(n);
-    displayList();
+    printf("Enter the size of the node ");
+    scanf("%d",&n);
+    createlist(n);
+    display();
 
     return 0;
 }
