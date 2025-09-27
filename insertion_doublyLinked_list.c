@@ -5,148 +5,90 @@ struct node {
     int data;
     struct node *prev;
     struct node *next;
-} *head, *last;
+};
 
-void createList(int n) {
-    int i, data;
-    struct node *newNode;
-
-    if (n >= 1) {
-        head = (struct node *)malloc(sizeof(struct node));
-        printf("Enter data of 1 node: ");
-        scanf("%d", &data);
-
-        head->data = data;
-        head->prev = NULL;
-        head->next = NULL;
-        last = head;
-
-        for (i = 2; i <= n; i++) {
-            newNode = (struct node *)malloc(sizeof(struct node));
-            printf("Enter data of %d node: ", i);
-            scanf("%d", &data);
-
-            newNode->data = data;
-            newNode->prev = last;
-            newNode->next = NULL;
-
-            last->next = newNode;
-            last = newNode;
-        }
-    }
-}
+struct node *head = NULL, *tail = NULL;
 
 void insert_first(int data) {
-    struct node *newNode = (struct node *)malloc(sizeof(struct node));
-    newNode->data = data;
-    newNode->prev = NULL;
-    newNode->next = head;
-    if (head != NULL)
-        head->prev = newNode;
-    head = newNode;
-    if (last == NULL)
-        last = newNode;
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    if (newnode == NULL) return;
+
+    newnode->data = data;
+    newnode->prev = NULL;
+    newnode->next = head;
+
+    if (head != NULL) {
+        head->prev = newnode;
+    } else {
+        tail = newnode;
+    }
+
+    head = newnode;
 }
 
-void insert_last(int data) {
-    struct node *newNode = (struct node *)malloc(sizeof(struct node));
-    newNode->data = data;
-    newNode->next = NULL;
-    newNode->prev = last;
-    if (last != NULL)
-        last->next = newNode;
-    last = newNode;
-    if (head == NULL)
-        head = newNode;
+void insert_end(int data) {
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    if (newnode == NULL) return;
+
+    newnode->data = data;
+    newnode->next = NULL;
+    newnode->prev = tail;
+
+    if (tail != NULL) {
+        tail->next = newnode;
+        tail = newnode;
+    } else {
+        head = tail = newnode;
+    }
 }
 
-void insert_position(int data, int position) {
-    struct node *newNode, *temp;
+void insert_middle(int data, int position) {
+    if (position <= 1) {
+        insert_first(data);
+        return;
+    }
+
+    struct node *temp = head;
     int i;
-
-    if (head == NULL) {
-        printf("Error, List is empty!\n");
-        return;
-    }
-
-    newNode = (struct node *)malloc(sizeof(struct node));
-    newNode->data = data;
-
-    if (position == 1) {
-        newNode->next = head;
-        newNode->prev = NULL;
-        head->prev = newNode;
-        head = newNode;
-        return;
-    }
-
-    temp = head;
-    for (i = 1; i < position - 1 && temp != NULL; i++) {
+    for (i = 2; i <= position - 1 && temp != NULL; i++) {
         temp = temp->next;
     }
 
     if (temp == NULL) {
-        free(newNode);
+        insert_end(data);
         return;
     }
 
-    newNode->next = temp->next;
-    newNode->prev = temp;
+    struct node *newnode = (struct node*)malloc(sizeof(struct node));
+    if (newnode == NULL) return;
+
+    newnode->data = data;
+    newnode->next = temp->next;
+    newnode->prev = temp;
 
     if (temp->next != NULL) {
-        temp->next->prev = newNode;
-    }
-
-    temp->next = newNode;
-
-    if (newNode->next == NULL) {
-        last = newNode;
-    }
-}
-
-void displayList() {
-    struct node *temp;
-    int n = 1;
-
-    if (head == NULL) {
-        printf("List is empty.\n");
+        temp->next->prev = newnode;
     } else {
-        temp = head;
-        printf("\nDATA IN THE LIST:\n");
-        while (temp != NULL) {
-            printf("DATA of %d node = %d\n", n, temp->data);
-            n++;
-            temp = temp->next;
-        }
+        tail = newnode;
     }
+
+    temp->next = newnode;
 }
 
-int main() {
-    int n, data, pos;
+void display() {
+    struct node *temp = head;
+    while (temp != NULL) {
+        printf("<-%d->", temp->data);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
 
-    printf("Enter the number of nodes: ");
-    scanf("%d", &n);
-
-    createList(n);
-    displayList();
-
-    printf("\nEnter data to insert at first: ");
-    scanf("%d", &data);
-    insert_first(data);
-    displayList();
-
-    printf("\nEnter data to insert at last: ");
-    scanf("%d", &data);
-    insert_last(data);
-    displayList();
-
-    printf("\nEnter data to insert: ");
-    scanf("%d", &data);
-    printf("Enter position to insert: ");
-    scanf("%d", &pos);
-    insert_position(data, pos);
-    displayList();
-
+int main() { 
+    insert_first(10);
+    insert_end(30);
+    insert_middle(20, 2);
+    insert_middle(40, 10);
+    display();
     return 0;
 }
-
